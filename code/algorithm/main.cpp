@@ -1,76 +1,31 @@
 #include<iostream>
 #include<string>
-
+#include<queue>
 using namespace std;
-int dp[1004][1004][2];
+
 class Solution {
 public:
-    string lp(string& s, int i, int j)
-    {
-        if (i > j)
-            return "";
-        if (dp[i][j][0] != 0 || dp[i][j][1] != 0)
-            return s.substr(dp[i][j][0], dp[i][j][1] - dp[i][j][0] + 1);
-        int len = j - i + 1;
-        if (len == 1)
-        {
-            dp[i][j][0] = dp[i][j][1] = i;
-            return s.substr(i, 1);
-        }
-        if (len == 2) {
-            if (s[i] == s[j])
+    int minMeetingRooms(vector<vector<int>>& intervals) {
+        if (intervals.empty())
+            return 0;
+        sort(intervals.begin(), intervals.end(), [&](auto a, auto b) {
+            if (a[0] == b[0])
+                return a[1] < b[1];
+            return a[0] < b[0];
+            });
+            priority_queue<int, vector<int>, greater<int>> q;
+            q.push(intervals[0][1]);
+            for (int i = 1; i < intervals.size(); ++i)
             {
-                dp[i][j][0] = i;
-                dp[i][j][1] = j;
-                return s;
+                if (intervals[i][0] >= q.top())
+                    q.pop();
+                q.push(intervals[i][1]);
             }
-            dp[i][j][0] = dp[i][j][1] = i;
-            return s.substr(i, 1);
-        }
-        string mid = lp(s, i + 1, j - 1);;
-        if (s[i] == s[j] && dp[i + 1][j - 1][0] == i + 1 && dp[i + 1][j - 1][1] == j - 1)
-        {
-            dp[i][j][0] = i;
-            dp[i][j][1] = j;
-            return s[i] + mid + s[j];
-        }
-        string l = lp(s, i, j - 1);
-        string r = lp(s, i + 1, j);
-        int ln = l.size(), rn = r.size(), mn = mid.size();
-        if (ln > rn)
-        {
-            if (mn > ln)
-            {
-                dp[i][j][0] = dp[i + 1][j - 1][0];
-                dp[i][j][1] = dp[i + 1][j - 1][1];
-                return mid;
-            }
-            dp[i][j][0] = dp[i][j - 1][0];
-            dp[i][j][1] = dp[i][j - 1][1];
-            return l;
-        }
-        if (mn > rn)
-        {
-            dp[i][j][0] = dp[i + 1][j - 1][0];
-            dp[i][j][1] = dp[i + 1][j - 1][1];
-            return mid;
-        }
-        dp[i][j][0] = dp[i + 1][j][0];
-        dp[i][j][1] = dp[i + 1][j][1];
-        return r;
-    }
-    string longestPalindrome(string s) {
-        for (int i = 0; i < 1004; ++i)
-            for (int j = 0; j < 1004; ++j)
-                dp[i][j][0] = dp[i][j][1] = 0;
-        int len = s.size();
-        return lp(s, 0, len - 1);
+            return q.size();
     }
 };
 
 int main()
 {
-    Solution mysolve;
-    string res = mysolve.longestPalindrome(string("cbbd"));
-    cout << res << endl;
+    
 }
