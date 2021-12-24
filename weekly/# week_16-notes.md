@@ -10,7 +10,7 @@
 3. 在同一个TCP连接里，所有的数据通信按次序进行，服务器处理完一个请求，接着处理下一个  
 4. HTTP2.0 IO multiplexing
 
-![pic](..\picture\http1.0and1.1.jpg)
+![pic](../picture/http1.0and1.1.jpg)
 
 ## shared_ptr
 **use** `shared_ptr<T> p=make_shared(new T)`  
